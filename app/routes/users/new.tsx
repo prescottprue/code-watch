@@ -1,11 +1,10 @@
 import type { ActionFunction } from "remix";
 import { useActionData, redirect, json } from "remix";
 import { requireUserId } from "~/utils/session.server";
-import { db } from "~/utils/db.server";
 
 function validateProjectName(name: string) {
   if (name.length < 3) {
-    return `That project's name is too short`;
+    return `That user's name is too short`;
   }
 }
 
@@ -19,21 +18,19 @@ type ActionData = {
   };
 };
 
-
 const badRequest = (data: ActionData) =>
   json(data, { status: 400 });
-
 
 export const action: ActionFunction = async ({
   request
 }) => {
-  console.log('before user load')
   const userId = await requireUserId(request);
+  // Must be logged in to create a user
   if (!userId) {
     return redirect('/login');
   }
+
   const form = await request.formData();
-  console.log('form', form)
   const name = form.get("name");
   if (typeof name !== "string") {
     return badRequest({
@@ -48,18 +45,18 @@ export const action: ActionFunction = async ({
   if (Object.values(fieldErrors).some(Boolean)) {
     return badRequest({ fieldErrors, fields });
   }
-
-  // Create new project
-  const project = await db.project.create({ data: { ...fields, userId } });
-  // Navigate to new project page
-  return redirect(`/projects/${project.id}`);
+  // TODO: Implement user invite which accepts email
+  // Create new user
+  // const user = await db.user.create({ data: { ...fields } });
+  // Navigate to new user page
+  // return redirect(`/users/${user.id}`);
 };
 
 export default function NewProjectRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <div>
-      <p>Add a project</p>
+      <p>Add a user</p>
       <form method="post">
         <div>
           <label>

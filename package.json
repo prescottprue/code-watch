@@ -1,16 +1,19 @@
 {
-  "private": true,
-  "name": "remix-app-template",
+  "name": "code-watch",
   "description": "",
-  "license": "",
+  "license": "MIT",
   "scripts": {
     "postinstall": "remix setup node",
     "build": "cross-env NODE_ENV=production remix build",
     "dev": "env-cmd remix dev",
     "deploy": "fly deploy --remote-only",
-    "start": "cross-env NODE_ENV=production remix-serve build"
+    "start": "cross-env NODE_ENV=production PORT=8080 remix-serve build"
   },
   "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.2",
+    "@mui/material": "^5.4.2",
     "@prisma/client": "^3.9.2",
     "@remix-run/react": "^1.2.1",
     "@remix-run/serve": "^1.2.1",
