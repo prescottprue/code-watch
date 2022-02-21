@@ -10,8 +10,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SERVICE_NAME: core-service
-  MAIN_REGION: us-central1
   NODE_VERSION: 16.x
 
 jobs:
