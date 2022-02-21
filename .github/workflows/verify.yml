@@ -1,0 +1,29 @@
+name: Fly Deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: verify-${{ github.head_ref }}
+  cancel-in-progress: true
+
+env:
+  SERVICE_NAME: core-service
+  MAIN_REGION: us-central1
+  NODE_VERSION: 16.x
+
+jobs:
+  build:
+      name: build
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
