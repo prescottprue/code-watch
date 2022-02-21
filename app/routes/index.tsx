@@ -1,3 +1,4 @@
+import { Button, Container, Grid, Typography } from "@mui/material";
 import { LinksFunction, Link } from "remix";
 
 import stylesUrl from "~/styles/index.css";
@@ -8,16 +9,24 @@ export const links: LinksFunction = () => {
 
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>CodeWatch</h1>
-      <p>Open source dependency and coverage reporting</p>
-      <Link
-        to="/projects"
-        title="CodeWatch Projects"
-        aria-label="CodeWatch Projects"
+    <div>
+      <Typography align="center">
+        Open source dependency and coverage reporting
+      </Typography>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '60vh' }}
       >
-        <span className="logo-medium">Get Started</span>
-      </Link>
+        <Grid item xs={3}>
+          <Button variant="contained" component={Link} to="/login">
+            Get Started
+          </Button>
+        </Grid>   
+      </Grid> 
     </div>
   );
 }

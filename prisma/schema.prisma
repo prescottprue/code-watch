@@ -16,14 +16,59 @@ model User {
   updatedAt    DateTime @updatedAt
   username     String   @unique
   passwordHash String
-  projects     Project[]
+  repos     Repo[]
+  outdatedSnapshots OutdatedSnapshot[]
+  coverageSnapshots CoverageSnapshot[]
 }
 
-model Project {
+model Repo {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  userId String
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name       String
+  outdatedSnapshots OutdatedSnapshot[]
+  coverageSnapshots CoverageSnapshot[]
+}
+
+model OutdatedSnapshot {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  repoId     String
+  repo       Repo     @relation(fields: [repoId], references: [id])
+  name       String?
+  outdatedDependencies OutdatedDependency[]
+  // outdated   Json // Array{ current, wanted, latest, dependent, location, name }
+  // TODO: Store other stuff here like which API key called
+}
+
+model OutdatedDependency {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  snapshotId String
+  snapshot   OutdatedSnapshot @relation(fields: [snapshotId], references: [id])
+  current    String
+  wanted     String
+  latest     String
+  dependent  String?
+  // user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+}
+
+model CoverageSnapshot {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  repoId     String
+  repo       Repo     @relation(fields: [repoId], references: [id])
+  name       String?
+  result     Json // Array{ current, wanted, latest, dependent, location, name }
+  // TODO: Store other stuff here like which API key called
 }

@@ -1,5 +1,6 @@
 import type { LinksFunction, LoaderFunction } from "remix";
 import { Outlet, Link, useLoaderData } from "remix";
+import { User } from "@prisma/client";
 import { getUser } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 
@@ -11,7 +12,7 @@ export const links: LinksFunction = () => {
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
-  projectListItems: Array<{ id: string; name: string }>;
+  userListItems: Array<User>;
 };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
@@ -20,20 +21,18 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   console.log('user', user)
 
   const data: LoaderData = {
-    projectListItems: await db.project.findMany(),
+    userListItems: await db.user.findMany(),
     user
   };
   console.log('data in loader', data)
   return data;
 };
 
-export default function ProjectsRoute() {
+export default function UsersRoute() {
   const data = useLoaderData<LoaderData>();
-  console.log('data in component', data)
-
   return (
-    <div className="projects-layout">
-      <header className="projects-header">
+    <div className="users-layout">
+      <header className="users-header">
         <div className="container">
           <h1 className="home-link">
             <Link
@@ -41,23 +40,23 @@ export default function ProjectsRoute() {
               title="CodeWatch Project"
               aria-label="CodeWatch Project"
             >
-              Projects
+              Users
             </Link>
           </h1>
         </div>
       </header>
-      <main className="projects-main">
+      <main className="users-main">
         <div className="container">
-          <div className="projects-list">
+          <div className="users-list">
             <ul>
-              {data.projectListItems.map(project => (
-                <li key={project.id}>
-                  <Link to={project.id}>{project.name}</Link>
+              {data.userListItems.map(user => (
+                <li key={user.id}>
+                  <Link to={user.id}>{user.username}</Link>
                 </li>
               ))}
             </ul>
             <Link to="new" className="button">
-              Add your own
+              Add A User
             </Link>
           </div>
           <div className="projects-outlet">
