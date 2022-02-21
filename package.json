@@ -7,7 +7,7 @@
     "build": "cross-env NODE_ENV=production remix build",
     "dev": "env-cmd remix dev",
     "deploy": "fly deploy --remote-only",
-    "start": "cross-env NODE_ENV=production remix-serve build"
+    "start": "cross-env NODE_ENV=production PORT=8080 remix-serve build"
   },
   "dependencies": {
     "@emotion/react": "^11.8.1",

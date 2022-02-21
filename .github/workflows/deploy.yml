@@ -16,4 +16,4 @@ jobs:
 
         - uses: superfly/flyctl-actions@1.3
           with:
-            args: "deploy --remote-only"
+            args: "deploy"
