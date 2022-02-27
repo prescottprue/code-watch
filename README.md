@@ -1,8 +1,12 @@
 # Code Watch
 
-- [Remix Docs](https://remix.run/docs)
+> Open source dependency and coverage reporting. Built with Remix.
 
-> Open source dependency and coverage reporting. Built with Remix
+## Reasoning
+
+A number of providers offer free coverage or dependency status reporting for open source projects, but for private project, the pricing model is often prohibitive. The problem is often compounded further by a large team size.
+
+Code Watch has the goal of providing an application which can be fully self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances.
 
 ## Development
 
@@ -12,11 +16,17 @@ From your terminal:
 npm run dev
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+This starts code-watch development mode, rebuilding assets on file changes.
 
 ## Deploy
 
-### Fly Setup
+### Automatic
+
+If you fork this repo the application and database will automatically deploy on [Fly.io](https://fly.io) through the [deploy workflow](/.github/workflows/deploy.yml) once `FLY_API_TOKEN` secret is set.
+
+### Manual
+
+#### Fly Setup
 
 1. [Install `flyctl`](https://fly.io/docs/getting-started/installing-flyctl/)
 
@@ -32,7 +42,7 @@ flyctl auth signup
 flyctl launch
 ```
 
-### Deployment
+#### Deployment
 
 If you've followed the setup instructions already, all you need to do is run this:
 
