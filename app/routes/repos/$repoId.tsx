@@ -1,34 +1,27 @@
 import { LoaderFunction, useLoaderData } from "remix";
 import { db } from "~/utils/db.server";
+import { Repo } from "@prisma/client";
 
 type LoaderData = {
-  project: { id: string; name: string }
+  repo: Repo
 };
 
-type Params = {
-  projectId: string
-}
-
 export let loader: LoaderFunction = async ({ params, request }) => {
-  console.log('params in project loader', params); // <-- {jokeId: "123"}
+  console.log('params in Repo loader', params);
 
-  const project = await db.project.findUnique({
-    where: { id: params.projectId }
+  const repo = await db.repo.findUnique({
+    where: { id: params.repoId }
   });
-  if (!project) throw new Error("project not found");
-  const data: LoaderData = { project };
+  if (!repo) throw new Error("repo not found");
+  const data: LoaderData = { repo };
   return data;
 };
 
-export default function ProjectRoute() {
+export default function RepoRoute() {
   const data = useLoaderData<LoaderData>();
   return (
     <div>
-      <p>{data.project.name}</p>
-      <p>
-        Why don't you find hippopotamuses hiding in trees?
-        They're really good at it.
-      </p>
+      <p>{data.repo.name}</p>
     </div>
   );
 }

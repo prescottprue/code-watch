@@ -60,7 +60,7 @@ export default function NewProjectRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <div>
-      <p>Add a project</p>
+      <p>Add a repo</p>
       <form method="post">
         <div>
           <label>

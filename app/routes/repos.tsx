@@ -22,6 +22,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
   console.log('user', user)
+  // TODO: Load github repos for linked orgs
 
   const data: LoaderData = {
     repoListItems: await db.repo.findMany(),
@@ -31,7 +32,7 @@ export let loader: LoaderFunction = async ({ request }) => {
   return data;
 };
 
-export default function ReposRoute() {
+export default function AddRepoRoute() {
   const { repoListItems: repos } = useLoaderData<LoaderData>();
 
   return (
