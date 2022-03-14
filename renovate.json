@@ -2,5 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>prescottprue/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "description": "LTS Versions Of Node In Docker",
+      "matchPackageNames": ["node"],
+      "matchManagers": ["dockerfile"],
+      "allowedVersions": "16"
+    }
   ]
 }
