@@ -1,7 +1,7 @@
-import { ActionFunction, LoaderFunction, unstable_parseMultipartFormData } from "remix";
+import { ActionFunction } from "remix";
 import { json } from "remix";
 import { db } from "~/utils/db.server";
-import { requireUserId } from "~/utils/session.server";
+import { requireUserId } from "~/services/session.server";
 
 interface CoverageUploadRequestBody {
   result: any

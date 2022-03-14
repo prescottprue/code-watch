@@ -1,6 +1,5 @@
-// app/routes/auth/github.tsx
 import { ActionFunction, LoaderFunction, redirect } from "remix";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/services/auth.server";
 
 export let loader: LoaderFunction = () => {
   console.log('loader of github index route')

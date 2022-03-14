@@ -2,8 +2,7 @@ import {
   createCookieSessionStorage,
   redirect
 } from "remix";
-// import { authenticator } from "~/auth.server";
-import { db } from "./db.server";
+import { db } from "../utils/db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
@@ -26,12 +25,12 @@ export let sessionStorage = createCookieSessionStorage({
 });
 
 function getUserSession(request: Request) {
-  return sessionStorage.getSession(request.headers.get("Cookie"));
+  return sessionStorage.getSession(request.headers.get("cookie"));
 }
 
 export async function getUserId(request: Request) {
   const session = await getUserSession(request);
-  const userId = session.get("userId");
+  const userId = session.get("user")?.id;
   if (!userId || typeof userId !== "string") return null;
   return userId;
 }
@@ -41,7 +40,7 @@ export async function requireUserId(
   redirectTo: string = new URL(request.url).pathname
 ) {
   const session = await getUserSession(request);
-  const userId = session.get("userId");
+  const userId = session.get("user")?.id;
   if (!userId || typeof userId !== "string") {
     const searchParams = new URLSearchParams([
       ["redirectTo", redirectTo]
@@ -53,23 +52,20 @@ export async function requireUserId(
 
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
-  if (typeof userId !== "string") {
-    return null;
+  if (typeof userId !== 'string') {
+    return null
   }
-
   try {
-    const user = await db.user.findUnique({
+    const userProfile = await db.user.findUnique({
       where: { id: userId },
       select: { id: true, username: true }
     });
-    return user;
+    console.log('user profile loaded', userProfile)
+    return userProfile;
   } catch {
-    throw logout(request);
+    throw new Error('Error creating profile')
+    // throw logout(request);
   }
-}
-
-export async function logout(request: Request) {
-  // await authenticator.logout(request, { redirectTo: "/login" });
 }
 
 export let { getSession, commitSession, destroySession } = sessionStorage;

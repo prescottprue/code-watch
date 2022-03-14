@@ -1,6 +1,6 @@
 // app/services/auth.server.ts
 import { Authenticator } from "remix-auth";
-import { sessionStorage } from "./utils/session.server";
+import { sessionStorage } from "./session.server";
 import { GitHubStrategy } from "remix-auth-github";
 import { User } from "@prisma/client";
 import { db } from "~/utils/db.server";
@@ -26,19 +26,21 @@ let gitHubStrategy = new GitHubStrategy(
     callbackURL: `${hostUrl}/auth/github/callback`,
   },
   // extraParams.tokenType
-  async ({ accessToken, extraParams, profile}) => {
-    // TODO: Lookup user based on username first
-    console.log('in success profile:', profile)
-    console.log('in success profile emails:', profile.emails)
+  async ({ accessToken, profile }) => {
     const { login: username } = profile._json
     console.log('in success username:', username)
-    const existingUser = await db.user.findFirst({ where: { username } })
-    console.log('existing user:', username)
-    if (existingUser) {
-      return existingUser
+    try {
+      const existingUser = await db.user.findFirst({ where: { username } })
+      console.log('existing user loaded', existingUser)
+      if (existingUser) {
+        return existingUser
+      }
+      // Get the user data from your DB or API using the tokens and profile
+      return db.user.create({ data: { username, avatarUrl: profile.photos[0].value } });
+    } catch(err) {
+      console.log('error', err)
+      throw err
     }
-    // Get the user data from your DB or API using the tokens and profile
-    return db.user.create({ data: { username, avatarUrl: profile.photos[0].value } });
   }
 );
 

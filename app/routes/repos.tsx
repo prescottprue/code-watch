@@ -5,7 +5,7 @@ import { Card, CardHeader, Grid, IconButton, Tooltip } from '@mui/material'
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete'
-import { getUser } from "~/utils/session.server";
+import { getUser } from "~/services/session.server";
 import { db } from "~/utils/db.server";
 
 import stylesUrl from "~/styles/projects.css";
@@ -19,8 +19,7 @@ type LoaderData = {
   repoListItems: Repo[];
 };
 
-export let loader: LoaderFunction = async ({ params, request }) => {
-  console.log('params in loader', params); // <-- {jokeId: "123"}
+export let loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request);
   console.log('user', user)
 

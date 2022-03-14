@@ -1,12 +1,23 @@
 import * as React from 'react'
 import Grid from '@mui/material/Grid'
-import type { LinksFunction } from "remix";
+import { json, LinksFunction, LoaderFunction } from "remix";
 import LoginForm from './LoginForm'
 import { Panel } from './Login.styled'
 import stylesUrl from "~/styles/login.css";
+import { authenticator } from '~/services/auth.server';
+import { getSession } from '~/services/session.server';
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  await authenticator.isAuthenticated(request, {
+    successRedirect: "/repos",
+  });
+  let session = await getSession(request.headers.get("cookie"));
+  let error = session.get(authenticator.sessionErrorKey);
+  return json({ error });
 };
 
 function LoginPage() {
