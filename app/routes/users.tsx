@@ -1,7 +1,7 @@
 import type { LinksFunction, LoaderFunction } from "remix";
 import { Outlet, Link, useLoaderData } from "remix";
 import { User } from "@prisma/client";
-import { getUser } from "~/utils/session.server";
+import { getUser } from "~/services/session.server";
 import { db } from "~/utils/db.server";
 
 import stylesUrl from "~/styles/projects.css";

@@ -15,8 +15,9 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   username     String   @unique
-  passwordHash String
+  passwordHash String?
   repos     Repo[]
+  avatarUrl String?
   outdatedSnapshots OutdatedSnapshot[]
   coverageSnapshots CoverageSnapshot[]
 }

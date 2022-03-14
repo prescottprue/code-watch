@@ -1,6 +1,6 @@
 import type { ActionFunction } from "remix";
 import { useActionData, redirect, json } from "remix";
-import { requireUserId } from "~/utils/session.server";
+import { requireUserId } from "~/services/session.server";
 import { db } from "~/utils/db.server";
 
 function validateProjectName(name: string) {
@@ -60,7 +60,7 @@ export default function NewProjectRoute() {
   const actionData = useActionData<ActionData>();
   return (
     <div>
-      <p>Add a project</p>
+      <p>Add a repo</p>
       <form method="post">
         <div>
           <label>
