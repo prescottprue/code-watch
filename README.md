@@ -10,13 +10,17 @@ Code Watch has the goal of providing an application which can be fully self host
 
 ## Development
 
-From your terminal:
-
-```sh
-npm run dev
-```
-
-This starts code-watch development mode, rebuilding assets on file changes.
+1. Create a `.env` with the following:
+    ```
+    DATABASE_URL=postgresql://postgres:example@localhost:5432?schema=public
+    SESSION_SECRET=asdfasdf
+    ```
+1. Run `docker-compose up` to start development Postgres database
+1. Start dev server:
+    ```sh
+    npm run dev
+    ```
+    This starts your app in development mode, rebuilding assets on file changes.
 
 ## Deploy
 
