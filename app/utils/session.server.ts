@@ -2,7 +2,7 @@ import {
   createCookieSessionStorage,
   redirect
 } from "remix";
-import { authenticator } from "~/auth.server";
+// import { authenticator } from "~/auth.server";
 import { db } from "./db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -69,7 +69,7 @@ export async function getUser(request: Request) {
 }
 
 export async function logout(request: Request) {
-  await authenticator.logout(request, { redirectTo: "/login" });
+  // await authenticator.logout(request, { redirectTo: "/login" });
 }
 
 export let { getSession, commitSession, destroySession } = sessionStorage;

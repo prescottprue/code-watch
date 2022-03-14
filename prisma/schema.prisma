@@ -17,6 +17,7 @@ model User {
   username     String   @unique
   passwordHash String?
   repos     Repo[]
+  avatarUrl String?
   outdatedSnapshots OutdatedSnapshot[]
   coverageSnapshots CoverageSnapshot[]
 }
