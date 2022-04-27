@@ -15,7 +15,7 @@
     "@mui/icons-material": "5.5.0",
     "@mui/material": "5.5.0",
     "@prisma/client": "3.10.0",
-    "@remix-run/node": "1.2.3",
+    "@remix-run/node": "1.4.3",
     "@remix-run/react": "1.2.3",
     "@remix-run/serve": "1.2.3",
     "bcryptjs": "2.4.3",
