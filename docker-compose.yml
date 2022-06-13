@@ -3,7 +3,7 @@ version: '3.1'
 services:
   db:
     container_name: codewatch-postgres
-    image: postgres:14
+    image: postgres:13
     restart: always
     environment:
       # environment variable takes precedence

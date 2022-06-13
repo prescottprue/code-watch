@@ -1,5 +1,6 @@
 import {
   createCookieSessionStorage,
+  json,
   redirect
 } from "remix";
 import { db } from "../utils/db.server";
@@ -48,6 +49,28 @@ export async function requireUserId(
     throw redirect(`/login?${searchParams}`);
   }
   return userId;
+}
+
+
+/**
+ * NOTE: Responds with json object with error parameter instead of throwing error
+ * @param request 
+ * @param redirectTo 
+ * @returns 
+ */
+export async function requireAuthHeader(
+  request: Request,
+  redirectTo: string = new URL(request.url).pathname
+) {
+  const authToken = request.headers.get("Authorization")?.split(" ")[1];
+  // TODO: Require auth token
+  if (!authToken) {
+    console.log('No Authorization token found in request headers, returning 401 to user')
+    throw new Error('Authorization header required')
+  }
+  // TODO: Require valid auth token
+  // TODO: Look up user account based on JWT
+  return 'ABC123'
 }
 
 export async function getUser(request: Request) {
