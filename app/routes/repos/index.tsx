@@ -1,16 +1,15 @@
-import type { LinksFunction, LoaderFunction } from "remix";
-import { Outlet, Link, useLoaderData } from "remix";
+import { Outlet, Link, useLoaderData } from "@remix-run/react";
 import { Repo } from "@prisma/client";
 import { Card, CardHeader, Grid, IconButton, Tooltip } from '@mui/material'
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete'
 import { getUser } from "~/services/session.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/db.server";
 
 import stylesUrl from "~/styles/projects.css";
 
-export const links: LinksFunction = () => {
+export const links = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
@@ -19,7 +18,7 @@ type LoaderData = {
   repoListItems: Repo[];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }) => {
   const user = await getUser(request);
   console.log('user', user)
   // TODO: Load github repos for linked orgs

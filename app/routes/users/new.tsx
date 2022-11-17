@@ -1,5 +1,5 @@
-import type { ActionFunction } from "remix";
-import { useActionData, redirect, json } from "remix";
+import { useActionData } from "@remix-run/react";
+import { redirect, json } from "@remix-run/node";
 import { requireUserId } from "~/services/session.server";
 
 function validateProjectName(name: string) {
@@ -21,7 +21,7 @@ type ActionData = {
 const badRequest = (data: ActionData) =>
   json(data, { status: 400 });
 
-export const action: ActionFunction = async ({
+export const action = async ({
   request
 }) => {
   const userId = await requireUserId(request);

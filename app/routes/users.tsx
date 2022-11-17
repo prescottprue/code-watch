@@ -1,12 +1,11 @@
-import type { LinksFunction, LoaderFunction } from "remix";
-import { Outlet, Link, useLoaderData } from "remix";
+import { Outlet, Link, useLoaderData } from "@remix-run/react";
 import { User } from "@prisma/client";
 import { getUser } from "~/services/session.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/db.server";
 
 import stylesUrl from "~/styles/projects.css";
 
-export const links: LinksFunction = () => {
+export const links = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
@@ -15,7 +14,7 @@ type LoaderData = {
   userListItems: Array<User>;
 };
 
-export let loader: LoaderFunction = async ({ params, request }) => {
+export const loader = async ({ params, request }) => {
   console.log('params in loader', params); // <-- {jokeId: "123"}
   const user = await getUser(request);
   console.log('user', user)

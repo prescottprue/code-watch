@@ -1,8 +1,8 @@
 import {
   createCookieSessionStorage,
   redirect
-} from "remix";
-import { db } from "../utils/db.server";
+} from "@remix-run/node";
+import { db } from "~/db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {

@@ -3,7 +3,7 @@ import { Authenticator } from "remix-auth";
 import { sessionStorage } from "./session.server";
 import { GitHubStrategy } from "remix-auth-github";
 import { User } from "@prisma/client";
-import { db } from "~/utils/db.server";
+import { db } from "~/db.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session

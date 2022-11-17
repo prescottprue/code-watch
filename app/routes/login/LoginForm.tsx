@@ -1,9 +1,9 @@
 import React from 'react'
 import Button from '@mui/material/Button'
 import GitHubIcon from '@mui/icons-material/GitHub';
-import type { LinksFunction } from "remix";
+import type { LinksFunction } from "@remix-run/node";
 import stylesUrl from "~/styles/login.css";
-import { Form } from "remix";
+import { Form } from "@remix-run/react";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];

@@ -15,11 +15,13 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   username     String   @unique
+  email String @unique
   passwordHash String?
   repos     Repo[]
   avatarUrl String?
   outdatedSnapshots OutdatedSnapshot[]
   coverageSnapshots CoverageSnapshot[]
+  notes    Note[]
 }
 
 model Repo {
@@ -72,4 +74,16 @@ model CoverageSnapshot {
   name       String?
   result     Json // Array{ current, wanted, latest, dependent, location, name }
   // TODO: Store other stuff here like which API key called
+}
+
+model Note {
+  id    String @id @default(cuid())
+  title String
+  body  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 }

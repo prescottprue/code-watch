@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

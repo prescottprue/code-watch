@@ -1,12 +1,12 @@
-import { LoaderFunction, useLoaderData } from "remix";
-import { db } from "~/utils/db.server";
+import { useLoaderData } from "@remix-run/react";
+import { db } from "~/db.server";
 import { Repo } from "@prisma/client";
 
 type LoaderData = {
   repo: Repo
 };
 
-export let loader: LoaderFunction = async ({ params, request }) => {
+export const loader = async ({ params, request }) => {
   console.log('params in Repo loader', params);
 
   const repo = await db.repo.findUnique({

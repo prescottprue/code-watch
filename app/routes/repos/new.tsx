@@ -1,7 +1,7 @@
-import type { ActionFunction } from "remix";
-import { useActionData, redirect, json } from "remix";
+import { useActionData } from "@remix-run/react";
+import { redirect, json } from "@remix-run/node";
 import { requireUserId } from "~/services/session.server";
-import { db } from "~/utils/db.server";
+import { db } from "~/db.server";
 
 function validateProjectName(name: string) {
   if (name.length < 3) {
@@ -24,7 +24,7 @@ const badRequest = (data: ActionData) =>
   json(data, { status: 400 });
 
 // TODO: Use loader to load list of Repos for user to choose from
-export const action: ActionFunction = async ({
+export const action = async ({
   request
 }) => {
   console.log('before user load')

@@ -1,13 +1,13 @@
-import { ActionFunction } from "remix";
-import { json } from "remix";
-import { db } from "~/utils/db.server";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { db } from "~/db.server";
 import { requireUserId } from "~/services/session.server";
 
 interface CoverageUploadRequestBody {
   result: any
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: LoaderFunction = async ({ request }) => {
   if (request.method !== "POST") {
     return json({ message: "Method not allowed" }, 405);
   }

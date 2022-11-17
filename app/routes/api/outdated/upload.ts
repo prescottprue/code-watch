@@ -1,14 +1,13 @@
 import { OutdatedDependency } from "@prisma/client";
-import { ActionFunction } from "remix";
-import { json } from "remix";
-import { db } from "~/utils/db.server";
+import { json, LoaderFunction } from "@remix-run/node";
+import { db } from "~/db.server";
 import { requireUserId } from "~/services/session.server";
 
 interface OutdatedUploadRequestBody {
   outdatedDependencies: OutdatedDependency[]
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: LoaderFunction = async ({ request }) => {
   if (request.method !== "POST") {
     return json({ message: "Method not allowed" }, 405);
   }

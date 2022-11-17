@@ -1,9 +1,9 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
-import { LinksFunction, Link } from "remix";
+import { Link } from "@remix-run/react";
 
 import stylesUrl from "~/styles/index.css";
 
-export const links: LinksFunction = () => {
+export const links = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
