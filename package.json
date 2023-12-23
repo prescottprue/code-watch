@@ -10,8 +10,8 @@
     "start": "cross-env NODE_ENV=production PORT=8080 remix-serve build"
   },
   "dependencies": {
-    "@emotion/react": "11.8.2",
-    "@emotion/styled": "11.8.1",
+    "@emotion/react": "11.11.3",
+    "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.5.0",
     "@mui/material": "5.5.0",
     "@prisma/client": "3.10.0",
