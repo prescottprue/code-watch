@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewRepoPage() {
   const actionData = useActionData<typeof action>();
   const githubOwnerRef = useRef<HTMLInputElement>(null);
-  const githubRepoRef = useRef<HTMLTextAreaElement>(null);
+  const githubRepoRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (actionData?.errors?.githubOwner) {
@@ -78,11 +78,10 @@ export default function NewRepoPage() {
       <div>
         <label className="flex w-full flex-col gap-1">
           <span>Github Repo: </span>
-          <textarea
+          <input
             ref={githubRepoRef}
             name="githubRepo"
-            rows={8}
-            className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
             aria-invalid={actionData?.errors?.githubRepo ? true : undefined}
             aria-errormessage={
               actionData?.errors?.githubRepo ? "githubRepo-error" : undefined
