@@ -23,7 +23,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/repos");
   return await authenticator.isAuthenticated(request, {
-    successRedirect: redirectTo
+    successRedirect: redirectTo,
   });
 };
 
@@ -37,7 +37,6 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <Form action="/auth/github" method="post" className="space-y-6">
-
           <input type="hidden" name="redirectTo" value={redirectTo} />
           <button
             type="submit"

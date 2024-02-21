@@ -33,12 +33,14 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
 export default function RepoDetailsPage() {
   const data = useLoaderData<typeof loader>();
-  const repoUrl = `https://github.com/${data.repo.githubOwner}/${data.repo.githubRepo}`
+  const repoUrl = `https://github.com/${data.repo.githubOwner}/${data.repo.githubRepo}`;
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.repo.githubOwner}</h3>
       <p className="py-6">{data.repo.githubRepo}</p>
-      <p className="py-6"><a href={repoUrl}>{repoUrl}</a></p>
+      <p className="py-6">
+        <a href={repoUrl}>{repoUrl}</a>
+      </p>
       <hr className="my-4" />
       <Form method="post">
         <button

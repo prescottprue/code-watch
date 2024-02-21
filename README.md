@@ -15,9 +15,9 @@ Code Watch has the goal of providing an application which can be fully self host
 
 ### Planned
 
-* Coverage threshold management with integration with Github's status API (to post status within)
-* Listing/syncing repos based on Github Auth
-* Coverage history graph
+- Coverage threshold management with integration with Github's status API (to post status within)
+- Listing/syncing repos based on Github Auth
+- Coverage history graph
 
 ### System Features
 
@@ -39,5 +39,4 @@ If you would like to run your own version of CodeWatch, please read [the run you
 
 ## Credits
 
-* [The Remix Blues Stack](https://repository-images.githubusercontent.com/4610126https://github.com/remix-run/blues-stack) - `npx create-remix@latest --template remix-run/blues-stack` was used to create this project and little was changed. Learn more about [Remix Stacks](https://remix.run/stacks).
-
+- [The Remix Blues Stack](https://repository-images.githubusercontent.com/4610126https://github.com/remix-run/blues-stack) - `npx create-remix@latest --template remix-run/blues-stack` was used to create this project and little was changed. Learn more about [Remix Stacks](https://remix.run/stacks).

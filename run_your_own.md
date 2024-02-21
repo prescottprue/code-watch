@@ -173,4 +173,3 @@ That way, we can keep your local db clean and keep your tests isolated from one 
 ### Vitest
 
 For lower level tests of utilities and individual components, we use `vitest`. We have DOM-specific assertion helpers via [`@testing-library/jest-dom`](https://testing-library.com/jest-dom).
-
