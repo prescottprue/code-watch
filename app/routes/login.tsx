@@ -7,7 +7,7 @@ import { redirect } from "@remix-run/node";
 import { Form, Link, useSearchParams } from "@remix-run/react";
 
 import { authenticator } from "~/services/auth.server";
-import { createUserSession, getUserId } from "~/session.server";
+import { getUserId } from "~/session.server";
 import { safeRedirect } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -20,19 +20,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await authenticator.isAuthenticated(request);
-
   const formData = await request.formData();
-
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
-  if (user) {
-    return createUserSession({
-      redirectTo,
-      remember: true,
-      request,
-      userId: user.id,
-    });
-  }
+  const redirectTo = safeRedirect(formData.get("redirectTo"), "/repos");
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: redirectTo
+  });
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];

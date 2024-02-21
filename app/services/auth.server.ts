@@ -17,8 +17,6 @@ const hostUrl = process.env.NODE_ENV === 'production'
 ? 'https://code-watch-cloud.fly.dev'
 : "http://localhost:3000"
 
-console.log('host url ----', hostUrl)
-
 const gitHubStrategy = new GitHubStrategy(
   {
     clientID: process.env.GITHUB_OAUTH_CLIENT_ID || '5417f5417163ff44ae16',
@@ -28,20 +26,16 @@ const gitHubStrategy = new GitHubStrategy(
   // extraParams.tokenType
   async ({ accessToken, profile }) => {
     const { login: githubUsername } = profile._json
-    console.log('in success username:', profile._json)
-    console.log('emails:', profile.emails)
     try {
       const existingUser = await prisma.user.findFirst({ where: { githubUsername } })
-      console.log('existing user loaded', existingUser)
       if (existingUser) {
         return existingUser
       }
       // Get the user data from your DB or API using the tokens and profile
-      const newUser = await prisma.user.create({ data: { githubUsername, avatarUrl: profile.photos[0].value, email: profile.emails[0].value, githubToken: accessToken } });
-      console.log('New user created', newUser)
+      const newUser = await prisma.user.create({ data: { githubUsername, avatarUrl: profile.photos[0].value, githubToken: accessToken } });
       return newUser
     } catch(err) {
-      console.log('error', err)
+      console.log('Error in Github Auth', err)
       throw err
     }
   }
