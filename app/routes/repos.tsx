@@ -2,17 +2,17 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
-import { getNoteListItems } from "~/models/note.server";
+import { getRepoListItems } from "~/models/repo.server";
 import { requireUserId } from "~/session.server";
 import { useUser } from "~/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await requireUserId(request);
-  const noteListItems = await getNoteListItems({ userId });
-  return json({ noteListItems });
+  await requireUserId(request);
+  const repoListItems = await getRepoListItems();
+  return json({ repoListItems });
 };
 
-export default function NotesPage() {
+export default function ReposPage() {
   const data = useLoaderData<typeof loader>();
   const user = useUser();
 
@@ -20,7 +20,7 @@ export default function NotesPage() {
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
-          <Link to=".">Notes</Link>
+          <Link to=".">Repos</Link>
         </h1>
         <p>{user.email}</p>
         <Form action="/logout" method="post">
@@ -36,24 +36,24 @@ export default function NotesPage() {
       <main className="flex h-full bg-white">
         <div className="h-full w-80 border-r bg-gray-50">
           <Link to="new" className="block p-4 text-xl text-blue-500">
-            + New Note
+            + New Repo
           </Link>
 
           <hr />
 
-          {data.noteListItems.length === 0 ? (
-            <p className="p-4">No notes yet</p>
+          {data.repoListItems.length === 0 ? (
+            <p className="p-4">No repos yet</p>
           ) : (
             <ol>
-              {data.noteListItems.map((note) => (
-                <li key={note.id}>
+              {data.repoListItems.map((repo) => (
+                <li key={repo.id}>
                   <NavLink
                     className={({ isActive }) =>
                       `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
                     }
-                    to={note.id}
+                    to={repo.id}
                   >
-                    📝 {note.title}
+                    📝 {repo.githubOwner}/{repo.githubRepo}
                   </NavLink>
                 </li>
               ))}

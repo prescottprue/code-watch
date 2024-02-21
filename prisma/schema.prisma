@@ -15,7 +15,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   password Password?
-  notes    Note[]
+  repos    Repo[]
 }
 
 model Password {
@@ -25,14 +25,63 @@ model Password {
   userId String @unique
 }
 
-model Note {
+model ApiCredential {
   id    String @id @default(cuid())
-  title String
-  body  String
+  name String
+  // TODO: Encrypt this value before storing
+  apiKey  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Repo {
+  id    String @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  githubOwner String
+  githubRepo String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+
+  outdatedSnapshots OutdatedSnapshot[]
+  coverageSnapshots CoverageSnapshot[]
+}
+
+model OutdatedSnapshot {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  repoId     String
+  repo       Repo     @relation(fields: [repoId], references: [id])
+  name       String?
+  outdatedDependencies OutdatedDependency[]
+  // outdated   Json // Array{ current, wanted, latest, dependent, location, name }
+  // TODO: Store other stuff here like which API key called
+}
+
+model OutdatedDependency {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  snapshotId String
+  snapshot   OutdatedSnapshot @relation(fields: [snapshotId], references: [id])
+  current    String
+  wanted     String
+  latest     String
+  dependent  String?
+  name       String
+}
+
+model CoverageSnapshot {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  repoId     String
+  repo       Repo     @relation(fields: [repoId], references: [id])
+  name       String?
+  result     Json // Array{ current, wanted, latest, dependent, location, name }
+  // TODO: Store other stuff here like which API key called
 }
