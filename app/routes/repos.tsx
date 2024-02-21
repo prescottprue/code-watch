@@ -3,18 +3,16 @@ import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
 import { getRepoListItems } from "~/models/repo.server";
-import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
+import { authenticator } from "~/services/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireUserId(request);
+  await authenticator.isAuthenticated(request);
   const repoListItems = await getRepoListItems();
   return json({ repoListItems });
 };
 
 export default function ReposPage() {
   const data = useLoaderData<typeof loader>();
-  const user = useUser();
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -22,7 +20,6 @@ export default function ReposPage() {
         <h1 className="text-3xl font-bold">
           <Link to=".">Repos</Link>
         </h1>
-        <p>{user.email}</p>
         <Form action="/logout" method="post">
           <button
             type="submit"

@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
 
-import prom from "@isaacs/express-prometheus-middleware";
 import { createRequestHandler } from "@remix-run/express";
 import type { ServerBuild } from "@remix-run/node";
 import { broadcastDevReady, installGlobals } from "@remix-run/node";
@@ -31,13 +30,6 @@ async function run() {
 
   const app = express();
   const metricsApp = express();
-  app.use(
-    prom({
-      metricsPath: "/metrics",
-      collectDefaultMetrics: true,
-      metricsApp,
-    }),
-  );
 
   app.use((req, res, next) => {
     // helpful headers:

@@ -13,7 +13,7 @@ if (!process.env.GITHUB_OAUTH_SECRET) {
   throw new Error('GITHUB_OAUTH_SECRET secret not set')
 }
 
-const hostUrl = process.env.HOST_URL || process.env.NODE_ENV === 'production'
+const hostUrl = process.env.NODE_ENV === 'production'
 ? 'https://code-watch-cloud.fly.dev'
 : "http://localhost:3000"
 
@@ -27,16 +27,19 @@ const gitHubStrategy = new GitHubStrategy(
   },
   // extraParams.tokenType
   async ({ accessToken, profile }) => {
-    const { login: username } = profile._json
-    console.log('in success username:', username)
+    const { login: githubUsername } = profile._json
+    console.log('in success username:', profile._json)
+    console.log('emails:', profile.emails)
     try {
-      const existingUser = await prisma.user.findFirst({ where: { username } })
+      const existingUser = await prisma.user.findFirst({ where: { githubUsername } })
       console.log('existing user loaded', existingUser)
       if (existingUser) {
         return existingUser
       }
       // Get the user data from your DB or API using the tokens and profile
-      return prisma.user.create({ data: { username, avatarUrl: profile.photos[0].value } });
+      const newUser = await prisma.user.create({ data: { githubUsername, avatarUrl: profile.photos[0].value, email: profile.emails[0].value, githubToken: accessToken } });
+      console.log('New user created', newUser)
+      return newUser
     } catch(err) {
       console.log('error', err)
       throw err
