@@ -1,30 +1,53 @@
 import { PrismaClient } from "@prisma/client";
-const db = new PrismaClient();
+import bcrypt from "bcryptjs";
+
+const prisma = new PrismaClient();
 
 async function seed() {
-  const testUser = await db.user.create({
-    data: {
-      username: "asdf2",
-      // this is a hashed version of "twixrox"
-      passwordHash:
-        "$2b$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdWoXehVzJptJ/op0lSsvqNu/1u"
-    }
+  const email = "admin@example.com";
+
+  // cleanup the existing database
+  await prisma.user.delete({ where: { email } }).catch(() => {
+    // no worries if it doesn't exist yet
   });
-  await Promise.all(
-    getRepos().map(repo => {
-      console.log('test user', testUser.id)
-      const data = { userId: testUser.id, ...repo };
-      return db.repo.create({ data });
-    })
-  );
-}
 
-seed();
+  const hashedPassword = await bcrypt.hash("adminiscool", 10);
 
-function getRepos() {
-  return [
-    {
-      name: "Test Repo",
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: {
+        create: {
+          hash: hashedPassword,
+        },
+      },
     },
-  ];
+  });
+
+  await prisma.repo.create({
+    data: {
+      githubOwner: "octocat",
+      githubRepo: "Hello-World",
+      userId: user.id,
+    },
+  });
+
+  await prisma.repo.create({
+    data: {
+      githubOwner: "octocat",
+      githubRepo: "Hello-World-2",
+      userId: user.id,
+    },
+  });
+
+  console.log(`Database has been seeded. 🌱`);
 }
+
+seed()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
