@@ -2,6 +2,7 @@
   "name": "code-watch",
   "description": "Open source dependency and coverage reporting. Built with Remix.",
   "sideEffects": false,
+  "license": "MIT",
   "scripts": {
     "build": "run-s build:*",
     "build:remix": "remix build",
