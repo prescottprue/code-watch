@@ -1,7 +1,9 @@
 node_modules
 
-/.cache
-/server/build
+/build
 /public/build
 .env
-build
+
+/cypress/screenshots
+/cypress/videos
+/postgres-data

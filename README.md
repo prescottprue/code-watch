@@ -8,52 +8,35 @@ A number of providers offer free coverage or dependency status reporting for ope
 
 Code Watch has the goal of providing an application which can be fully self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances.
 
-## Development
+## Features
 
-1. Create a `.env` with the following:
-    ```
-    DATABASE_URL=postgresql://postgres:example@localhost:5432?schema=public
-    SESSION_SECRET=asdfasdf
-    ```
-1. Run `docker-compose up` to start development Postgres database
-1. Start dev server:
-    ```sh
-    npm run dev
-    ```
-    This starts your app in development mode, rebuilding assets on file changes.
+- Tracking and displaying coverage results
+- Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#creatememorysessionstorage)
 
-## Deploy
+### Planned
 
-### Automatic
+- Coverage threshold management with integration with Github's status API (to post status within)
+- Listing/syncing repos based on Github Auth
+- Coverage history graph
 
-If you fork this repo the application and database will automatically deploy on [Fly.io](https://fly.io) through the [deploy workflow](/.github/workflows/deploy.yml) once `FLY_API_TOKEN` secret is set.
+### System Features
 
-### Manual
+- [Multi-region Fly app deployment](https://fly.io/docs/reference/scaling/) with [Docker](https://www.docker.com/)
+- [Multi-region Fly PostgreSQL Cluster](https://fly.io/docs/getting-started/multi-region-databases/)
+- Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
+- [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
+- Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#creatememorysessionstorage)
+- Database ORM with [Prisma](https://prisma.io)
+- Styling with [Tailwind](https://tailwindcss.com/)
+- End-to-end testing with [Cypress](https://cypress.io)
+- Local third party request mocking with [MSW](https://mswjs.io)
+- Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
+- Code formatting with [Prettier](https://prettier.io)
+- Linting with [ESLint](https://eslint.org)
+- Static Types with [TypeScript](https://typescriptlang.org)
 
-#### Fly Setup
+If you would like to run your own version of CodeWatch, please read [the run your own docs](./run_your_own.md)
 
-1. [Install `flyctl`](https://fly.io/docs/getting-started/installing-flyctl/)
+## Credits
 
-2. Sign up and log in to Fly
-
-```sh
-flyctl auth signup
-```
-
-3. Setup Fly. It might ask if you want to deploy, say no since you haven't built the app yet.
-
-```sh
-flyctl launch
-```
-
-#### Deployment
-
-If you've followed the setup instructions already, all you need to do is run this:
-
-```sh
-npm run deploy
-```
-
-You can run `flyctl info` to get the url and ip address of your server.
-
-Check out the [fly docs](https://fly.io/docs/getting-started/node/) for more information.
+- [The Remix Blues Stack](https://repository-images.githubusercontent.com/4610126https://github.com/remix-run/blues-stack) - `npx create-remix@latest --template remix-run/blues-stack` was used to create this project and little was changed. Learn more about [Remix Stacks](https://remix.run/stacks).
