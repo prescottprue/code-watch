@@ -5,8 +5,7 @@ import { GitHubStrategy } from "remix-auth-github";
 import { prisma } from "~/db.server";
 import { sessionStorage } from "~/session.server";
 
-// Create an instance of the authenticator, pass a generic with what
-// strategies will return and will store in the session
+// Create an instance of the authenticator, pass session storage config
 const authenticator = new Authenticator<User>(sessionStorage);
 
 if (!process.env.GITHUB_OAUTH_SECRET) {
@@ -38,7 +37,7 @@ const gitHubStrategy = new GitHubStrategy(
       const newUser = await prisma.user.create({
         data: {
           githubUsername,
-          avatarUrl: profile.photos[0].value,
+          avatarUrl: profile.photos?.[0]?.value,
           githubToken: accessToken,
         },
       });
