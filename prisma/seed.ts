@@ -4,23 +4,16 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function seed() {
-  const email = "admin@example.com";
+  const githubUsername = "octocat";
 
   // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
+  await prisma.user.delete({ where: { githubUsername } }).catch(() => {
     // no worries if it doesn't exist yet
   });
 
-  const hashedPassword = await bcrypt.hash("adminiscool", 10);
-
   const user = await prisma.user.create({
     data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
-        },
-      },
+      githubUsername,
     },
   });
 

@@ -12,15 +12,12 @@ import { createUserSession } from "~/session.server";
 
 installGlobals();
 
-async function createAndLogin(email: string) {
-  if (!email) {
+async function createAndLogin(githubUsername: string) {
+  if (!githubUsername) {
     throw new Error("email required for login");
   }
-  if (!email.endsWith("@example.com")) {
-    throw new Error("All test emails must end in @example.com");
-  }
 
-  const user = await createUser(email, "myreallystrongpassword");
+  const user = await createUser(githubUsername);
 
   const response = await createUserSession({
     request: new Request("test://test"),
