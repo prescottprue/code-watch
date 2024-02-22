@@ -1,11 +1,12 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
+  Form,
   useFetcher,
   useLoaderData,
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
-import { useRef } from "react";
+import { useRef, useTransition } from "react";
 
 import { Repo, createRepo, getRepoListItems } from "~/models/repo.server";
 // import { createRepo } from "~/models/repo.server";
@@ -101,7 +102,6 @@ export default function NewRepoPage() {
   const submit = useSubmit()
 
   const isSubmitting = fetcher.state === "submitting";
-
   const searchRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -113,7 +113,7 @@ export default function NewRepoPage() {
         width: "100%",
       }}
     >
-      <fetcher.Form method="get">
+      <Form method="get">
         <h1 className="text-3xl font-bold">Add Repos</h1>
         <p className="text-md mb-4">
           Switch the toggle next to any repo to add it to Code Watch.
@@ -137,7 +137,7 @@ export default function NewRepoPage() {
             </button>
           </div>
         </div>
-      </fetcher.Form>
+      </Form>
 
       {loaderData.repos ? (
         <ol className="flex w-full flex-col gap-1">
@@ -154,7 +154,7 @@ export default function NewRepoPage() {
                       {/* <button type="submit" value={repo.dbRepo ? "1" : "0"} name="enabled" className="sr-only peer" id={`${repo.id}-enable`} disabled={isSubmitting || !!repo.dbRepo} /> */}
                       <input
                         type="checkbox"
-                        checked={!!repo.dbRepo}
+                        defaultChecked={!!repo.dbRepo}
                         name="enabled"
                         className="sr-only peer"
                         id={`${repo.id}-enable`}
