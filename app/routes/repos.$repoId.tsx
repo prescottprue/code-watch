@@ -2,6 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
+  Link,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
@@ -9,13 +10,13 @@ import {
 import invariant from "tiny-invariant";
 
 import { deleteRepo, getRepo } from "~/models/repo.server";
-import { requireUserId } from "~/session.server";
+import { authenticator } from "~/services/auth.server";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const userId = await requireUserId(request);
+  const user = await authenticator.isAuthenticated(request);
   invariant(params.repoId, "repoId not found");
 
-  const repo = await getRepo({ id: params.repoId, userId });
+  const repo = await getRepo({ id: params.repoId, userId: user?.id as string });
   if (!repo) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -23,23 +24,38 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const userId = await requireUserId(request);
+  const user = await authenticator.isAuthenticated(request);
   invariant(params.repoId, "repoId not found");
 
-  await deleteRepo({ id: params.repoId, userId });
+  await deleteRepo({ id: params.repoId, userId: user?.id as string });
 
   return redirect("/repos");
 };
 
 export default function RepoDetailsPage() {
-  const data = useLoaderData<typeof loader>();
-  const repoUrl = `https://github.com/${data.repo.githubOwner}/${data.repo.githubRepo}`;
+  const { repo } = useLoaderData<typeof loader>();
+  const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
   return (
-    <div>
-      <h3 className="text-2xl font-bold">{data.repo.githubOwner}</h3>
-      <p className="py-6">{data.repo.githubRepo}</p>
+    <div className="my-6 mx-6">
+      <h3 className="text-2xl font-bold">
+        <Link to="/repos">{repo.githubOwner}</Link>/{repo.githubRepo}
+      </h3>
       <p className="py-6">
-        <a href={repoUrl}>{repoUrl}</a>
+        Github Link: <a href={repoUrl}>{repoUrl}</a>
+      </p>
+
+      <p className="py-6">
+        {repo.coverageSnapshots.length ? (
+          repo.coverageSnapshots.map((snapshot) => (
+            <div key={snapshot.id}>
+              <p>branch:{snapshot.branch}</p>
+              <p>Created:{snapshot.createdAt}</p>
+              <p>Result:{JSON.stringify(snapshot.result)}</p>
+            </div>
+          ))
+        ) : (
+          <div>No coverage snapshots captured</div>
+        )}
       </p>
       <hr className="my-4" />
       <Form method="post">
