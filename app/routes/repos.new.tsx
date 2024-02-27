@@ -112,14 +112,14 @@ export default function NewRepoPage() {
         gap: 8,
         width: "100%",
       }}
-      className="my-4 mx-4"
+      className="my-8 mx-8"
     >
       <Form method="get">
         <h1 className="text-3xl font-bold">Add Repos</h1>
         <p className="text-md mb-4">
           Switch the toggle next to any repo to add it to Code Watch.
         </p>
-        <div className="flex space-x-4 mb-6">
+        <div className="flex space-x-4 mx-10 my-6">
           <label className="flex flex-1 flex-col gap-1">
             <span>Search: </span>
             <input
@@ -141,7 +141,7 @@ export default function NewRepoPage() {
       </Form>
 
       {loaderData.repos ? (
-        <ol className="flex w-full flex-col gap-1">
+        <ol className="flex flex-col gap-1 mx-10">
           {loaderData.repos.map((repo) => {
             return (
               <li key={repo.id} className="flex-col">

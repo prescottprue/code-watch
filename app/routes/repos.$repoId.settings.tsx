@@ -1,7 +1,8 @@
 import { CoverageSnapshot } from "@prisma/client";
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import {
+  Form,
   Link,
   isRouteErrorResponse,
   useLoaderData,
@@ -10,8 +11,7 @@ import {
 import invariant from "tiny-invariant";
 
 import { GithubIcon } from "~/components/GithubIcon";
-import { ResultsTable } from "~/components/ResultsTable";
-import { getRepo } from "~/models/repo.server";
+import { deleteRepo, getRepo } from "~/models/repo.server";
 import { authenticator } from "~/services/auth.server";
 
 interface CountItem {
@@ -43,12 +43,21 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return json({ repo });
 };
 
-export default function RepoDetailsPage() {
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request);
+  invariant(params.repoId, "repoId not found");
+
+  await deleteRepo({ id: params.repoId, userId: user?.id as string });
+
+  return redirect("/repos");
+};
+
+export default function RepoSettingsPage() {
   const { repo } = useLoaderData<typeof loader>();
   const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
 
   return (
-    <div className="py-6 px-6 w-full">
+    <div className="my-6 mx-6 w-full">
       <h3 className="text-2xl font-bold">
         <Link to="/repos">{repo.githubOwner}</Link>/{repo.githubRepo}
       </h3>
@@ -58,25 +67,15 @@ export default function RepoDetailsPage() {
           <GithubIcon />
         </a>
       </div>
-      <div className="flex justify-center w-full my-8">
-        {repo.coverageSnapshots?.length ? (
-          <ResultsTable
-            repoUrl={repoUrl}
-            coverageSnapshots={
-              repo.coverageSnapshots as [] as CoverageSnapshotWithResult[]
-            }
-          />
-        ) : (
-          <div>
-            <h3 className="text-m font-bold">No coverage snapshots</h3>
-            <div className="flex justify-center">
-              <pre style={{ display: "inline" }}>POST</pre> results to
-              /api/repos/$owner/$repo/coverage
-            </div>
-          </div>
-        )}
-      </div>
       <hr className="my-4" />
+      <Form method="post">
+        <button
+          type="submit"
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+        >
+          Delete
+        </button>
+      </Form>
     </div>
   );
 }
