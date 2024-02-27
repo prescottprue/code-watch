@@ -15,7 +15,7 @@ export default function ReposIndexPage() {
   return (
     <div className="h-full w-full border-r bg-gray-50 px-8 my-8">
       <h1 className="text-3xl font-bold">Repos</h1>
-      <Link to="new" className="block p-4 text-xl text-blue-500">
+      <Link to="new" className="block p-4 text-xl text-blue-500" aria-label="new repo">
         + New Repo
       </Link>
       <div>
