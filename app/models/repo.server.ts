@@ -10,14 +10,20 @@ export function getRepo({
   userId: User["id"];
 }) {
   return prisma.repo.findFirst({
-    select: { id: true, githubOwner: true, githubRepo: true },
+    select: {
+      id: true,
+      githubOwner: true,
+      githubRepo: true,
+      coverageSnapshots: true,
+    },
     where: { id },
   });
 }
 
-export function getRepoListItems() {
+export function getRepoListItems(githubOwner: string) {
   return prisma.repo.findMany({
     select: { id: true, githubOwner: true, githubRepo: true },
+    where: { githubOwner },
     orderBy: { updatedAt: "desc" },
   });
 }

@@ -1,8 +1,8 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { createCookieSessionStorage, json, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
-import { getUserById } from "~/models/user.server";
+import { getUserByApiKey, getUserById } from "~/models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -40,6 +40,29 @@ export async function getUser(request: Request) {
   if (user) return user;
 
   throw await logout(request);
+}
+
+export async function requireApiKey(request: Request) {
+  const authHeader = request.headers.get("Authorization");
+  const [, token] = authHeader?.split(" ") || [];
+  if (!token) {
+    throw json({ message: "API Key required" });
+  }
+  const user = await getUserByApiKey(token);
+  if (!user) {
+    throw json({ message: "Invalid API key" }, 401);
+  }
+  return user;
+}
+
+export async function requireUserApiKey(
+  request: Request,
+  githubUsername: string,
+) {
+  const user = await requireApiKey(request);
+  if (user.githubUsername !== githubUsername) {
+    throw json({ message: "Unauthorized" }, 401);
+  }
 }
 
 export async function requireUserId(

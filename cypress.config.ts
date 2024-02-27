@@ -2,6 +2,9 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
+    env: {
+      GITHUB_OAUTH_SECRET: 'fake-secret'
+    },
     setupNodeEvents: (on, config) => {
       const isDev = config.watchForFileChanges;
       const port = process.env.PORT ?? (isDev ? "3000" : "8811");

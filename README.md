@@ -37,6 +37,12 @@ Code Watch has the goal of providing an application which can be fully self host
 
 If you would like to run your own version of CodeWatch, please read [the run your own docs](./run_your_own.md)
 
+## Screenshots
+
+<img width="1000" alt="image" src="https://github.com/prescottprue/code-watch/assets/2992224/512a4b00-7bcb-411b-acc5-8a65487aa8aa">
+
+<div><img width="1000" alt="image" src="https://github.com/prescottprue/code-watch/assets/2992224/092869ab-987a-41a4-a4ce-a96bebf49fe6"></div>
+
 ## Credits
 
 - [The Remix Blues Stack](https://repository-images.githubusercontent.com/4610126https://github.com/remix-run/blues-stack) - `npx create-remix@latest --template remix-run/blues-stack` was used to create this project and little was changed. Learn more about [Remix Stacks](https://remix.run/stacks).

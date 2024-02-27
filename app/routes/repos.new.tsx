@@ -26,7 +26,7 @@ interface GithubRepo {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request);
   try {
-    const dbRepos = await getRepoListItems();
+    const dbRepos = await getRepoListItems(user?.githubUsername as string);
     console.log("db repos", dbRepos);
     const url = new URL(request.url);
     const search = new URLSearchParams(url.search);
@@ -99,7 +99,7 @@ export default function NewRepoPage() {
   const loaderData = useLoaderData<typeof loader>();
   const [params] = useSearchParams();
   const fetcher = useFetcher();
-  const submit = useSubmit()
+  const submit = useSubmit();
 
   const isSubmitting = fetcher.state === "submitting";
   const searchRef = useRef<HTMLInputElement>(null);
@@ -112,13 +112,14 @@ export default function NewRepoPage() {
         gap: 8,
         width: "100%",
       }}
+      className="my-8 mx-8"
     >
       <Form method="get">
         <h1 className="text-3xl font-bold">Add Repos</h1>
         <p className="text-md mb-4">
           Switch the toggle next to any repo to add it to Code Watch.
         </p>
-        <div className="flex space-x-4 mb-6">
+        <div className="flex space-x-4 mx-10 my-6">
           <label className="flex flex-1 flex-col gap-1">
             <span>Search: </span>
             <input
@@ -140,11 +141,14 @@ export default function NewRepoPage() {
       </Form>
 
       {loaderData.repos ? (
-        <ol className="flex w-full flex-col gap-1">
+        <ol className="flex flex-col gap-1 mx-10">
           {loaderData.repos.map((repo) => {
             return (
               <li key={repo.id} className="flex-col">
-                <fetcher.Form method="post" onChange={(e) => submit(e.currentTarget)}>
+                <fetcher.Form
+                  method="post"
+                  onChange={(e) => submit(e.currentTarget)}
+                >
                   <div className="flex-row inline-flex py-2">
                     {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                     <label
