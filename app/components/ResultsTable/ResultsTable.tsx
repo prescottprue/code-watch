@@ -85,6 +85,7 @@ export function ResultsTable({ coverageSnapshots, repoUrl }: Props) {
               <td className="px-6 py-4 whitespace-nowrap">
                 {format(snapshot.createdAt, "MM/dd/yyyy h:m:s aa")} {timeZone}
               </td>
+              {console.log('result', result)}
               <td className="px-6 py-4 whitespace-nowrap">
                 {result.total.lines.covered} of {result.total.lines.total}
               </td>

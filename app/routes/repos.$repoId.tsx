@@ -37,6 +37,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.repoId, "repoId not found");
 
   const repo = await getRepo({ id: params.repoId, userId: user?.id as string });
+  console.log('repo', repo?.coverageSnapshots[0].result)
   if (!repo) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -46,7 +47,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function RepoDetailsPage() {
   const { repo } = useLoaderData<typeof loader>();
   const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
-
+  console.log('repo', repo)
   return (
     <div className="py-6 px-6 w-full">
       <h3 className="text-2xl font-bold">
@@ -69,9 +70,9 @@ export default function RepoDetailsPage() {
         ) : (
           <div>
             <h3 className="text-m font-bold">No coverage snapshots</h3>
-            <div className="flex justify-center">
-              <pre style={{ display: "inline" }}>POST</pre> results to
-              /api/repos/$owner/$repo/coverage
+            <div className="flex flex-col items-center">
+              <p><pre style={{ display: "inline" }}>POST</pre> results to:</p><br />
+              <p>/api/repos/{repo.githubOwner}/{repo.githubRepo}/coverage</p>
             </div>
           </div>
         )}

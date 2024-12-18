@@ -10,8 +10,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
   console.log("Coverage upload called, checking for user", request);
 
-  await requireApiKey(request);
+  // await requireApiKey(request);
   // TODO: Verify that this API key has access to the repo
+  // TODO: Accept file in multipart/form-data or provide signed url for cli upload
 
   // Parse and verify request body
   const requestBody: Pick<CoverageSnapshot, "repoId"> & {
