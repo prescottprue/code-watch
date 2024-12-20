@@ -91,5 +91,6 @@ model CoverageSnapshot {
   name       String?
   result     Json? // Array{ current, wanted, latest, dependent, location, name }
   branch     String?
+  coverageFilePath String
   // TODO: Store other stuff here like which API key called
 }

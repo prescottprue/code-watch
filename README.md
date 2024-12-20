@@ -6,11 +6,11 @@
 
 A number of providers offer free coverage or dependency status reporting for open source projects, but for private project, the pricing model is often prohibitive. The problem is often compounded further by a large team size.
 
-Code Watch has the goal of providing an application which can be self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances. NOTE: Currently Google Cloud Storage is used for less to maintain (instead of a self hosted solution like Minio) - as called out below, if there is intrest, storage through Minio can be implemented.
+Code Watch has the goal of providing an application which can be self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances.
 
 ## Features
 
-- Tracking and displaying coverage results
+- Tracking and displaying coverage results (storage of results within Minio object storage)
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#creatememorysessionstorage)
 
 ### Planned
@@ -18,11 +18,6 @@ Code Watch has the goal of providing an application which can be self hosted to 
 - Coverage threshold management with integration with Github's status API (to post status within)
 - Listing/syncing repos based on Github Auth
 - Coverage history graph
-
-## FAQ
-
-* Why Google Cloud?
-  GCS is used for storage. This was chosen as one less thing (file storage) to manage, but if there is intrest, file storage through Minio can be implemented
 
 ### System Features
 
