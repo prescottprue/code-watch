@@ -21,7 +21,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   await requireApiKey(request);
 
   // TODO: Use safe assignment opperator
-  const repo = await prisma.repo.findFirst({ where: { githubOwner: params.owner, githubRepo: params.repo } })
+  const repo = await prisma.repo.findFirst({ where: { owner: params.owner, repo: params.repo } })
   if (!repo) {
     return json(
       { errors: { file: "Repo not found" } },
@@ -44,7 +44,15 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
-  let coverageFilePath = `coverage-results/${params.ownerId}/${params.repoId}`;
+  const branch = formData.get("branch");
+  if (!branch || typeof branch !== 'string') {
+    return json(
+      { errors: { file: "Coverage branch is required" } },
+      { status: 400 },
+    );
+  }
+
+  let coverageFilePath = `coverage-results/${params.owner}/${params.repo}`;
   // Write lcov.info to minio object storage (https://fly.io/docs/app-guides/minio)
   try {
     const fileObj = file as File;
@@ -65,7 +73,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   // console.log("User id loaded for upload request:", userId);
   try {
     const snapshot = await prisma.coverageSnapshot.create({
-      data: { coverageFilePath, repoId: repo.id },
+      data: { coverageFilePath, repoId: repo.id, branch },
     });
     console.log("Snapshot uploaded successfully");
     return json(snapshot, 200);

@@ -34,9 +34,9 @@ export type CoverageSnapshotWithResult = { result: Result } & CoverageSnapshot;
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  invariant(params.repoId, "repoId not found");
+  invariant(params.repo, "repo not found");
 
-  const repo = await getRepo({ id: params.repoId, userId: user?.id as string });
+  const repo = await getRepo({ id: params.repo, userId: user?.id as string });
   if (!repo) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -45,21 +45,21 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  invariant(params.repoId, "repoId not found");
+  invariant(params.repo, "repo not found");
 
-  await deleteRepo({ id: params.repoId, userId: user?.id as string });
+  await deleteRepo({ id: params.repo, userId: user?.id as string });
 
   return redirect("/repos");
 };
 
 export default function RepoSettingsPage() {
   const { repo } = useLoaderData<typeof loader>();
-  const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
+  const repoUrl = `https://github.com/${repo.owner}/${repo.repo}`;
 
   return (
     <div className="my-6 mx-6 w-full">
       <h3 className="text-2xl font-bold">
-        <Link to="/repos">{repo.githubOwner}</Link>/{repo.githubRepo}
+        <Link to="/repos">{repo.owner}</Link>/{repo.repo}
       </h3>
       <div className="flex justify-end">
         {" "}

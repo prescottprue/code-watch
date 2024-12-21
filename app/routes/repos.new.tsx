@@ -27,7 +27,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request);
   try {
     const dbRepos = await getRepoListItems(user?.githubUsername as string);
-    console.log("db repos", dbRepos);
     const url = new URL(request.url);
     const search = new URLSearchParams(url.search);
     // Leverage Github's search API if user provided search exists
@@ -39,16 +38,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
         `https://api.github.com/search/repositories?${searchParams.toString()}`,
         { headers: { Authorization: `Bearer ${user?.githubToken}` } },
       );
-      const { items: githubRepos } = (await reposResponse.json()) as {
+      const { items: repos } = (await reposResponse.json()) as {
         items: GithubRepo[];
       };
       return {
-        repos: githubRepos.map((githubRepo) => ({
-          ...githubRepo,
+        repos: repos.map((repo) => ({
+          ...repo,
           dbRepo: dbRepos.find(
             (dbRepo) =>
-              githubRepo.name === dbRepo.githubRepo &&
-              githubRepo.owner.login === dbRepo.githubOwner,
+              repo.name === dbRepo.repo &&
+              repo.owner.login === dbRepo.owner,
           ),
         })),
       };
@@ -58,15 +57,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       `https://api.github.com/users/${user?.githubUsername}/repos?sort=updated`,
       { headers: { Authorization: `Bearer ${user?.githubToken}` } },
     );
-    const githubRepos = (await reposResponse.json()) as GithubRepo[];
+    const repos = (await reposResponse.json()) as GithubRepo[];
     // TODO: Include whether or not repos are enabled already by querying db
     return {
-      repos: githubRepos.map((githubRepo) => ({
-        ...githubRepo,
+      repos: repos.map((repo) => ({
+        ...repo,
         dbRepo: dbRepos.find(
           (dbRepo) =>
-            githubRepo.name === dbRepo.githubRepo &&
-            githubRepo.owner.login === dbRepo.githubOwner,
+            repo.name === dbRepo.repo &&
+            repo.owner.login === dbRepo.owner,
         ),
       })),
     };
@@ -86,12 +85,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw new Error("user is required");
   }
   const formData = await request.formData();
-  const githubRepo = String(formData.get("githubRepo"));
-  const githubOwner = String(formData.get("githubOwner"));
-  if (!githubOwner || !githubRepo) {
+  const repo = String(formData.get("repo"));
+  const owner = String(formData.get("owner"));
+  if (!owner || !repo) {
     throw new Error("owner and repo required");
   }
-  await createRepo({ githubOwner, githubRepo, userId: user.id });
+  await createRepo({ owner, repo, userId: user.id });
   return null;
 };
 
@@ -166,12 +165,12 @@ export default function NewRepoPage() {
                       />
                       <input
                         type="hidden"
-                        name="githubOwner"
+                        name="owner"
                         value={repo.owner.login}
                       />
                       <input
                         type="hidden"
-                        name="githubRepo"
+                        name="repo"
                         value={repo.name}
                       />
                       <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

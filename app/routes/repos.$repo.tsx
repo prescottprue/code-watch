@@ -45,11 +45,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function RepoDetailsPage() {
   const { repo } = useLoaderData<typeof loader>();
-  const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
+  const repoUrl = `https://github.com/${repo.owner}/${repo.repo}`;
   return (
     <div className="py-6 px-6 w-full">
       <h3 className="text-2xl font-bold">
-        <Link to="/repos">{repo.githubOwner}</Link>/{repo.githubRepo}
+        <Link to="/repos">{repo.owner}</Link>/{repo.repo}
       </h3>
       <div className="flex justify-end">
         {" "}
@@ -70,7 +70,7 @@ export default function RepoDetailsPage() {
             <h3 className="text-m font-bold">No coverage snapshots</h3>
             <div className="flex flex-col items-center">
               <p><pre style={{ display: "inline" }}>POST</pre> results to:</p><br />
-              <p>/api/repos/{repo.githubOwner}/{repo.githubRepo}/coverage</p>
+              <p>/api/repos/{repo.owner}/{repo.repo}/coverage</p>
             </div>
           </div>
         )}

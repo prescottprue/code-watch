@@ -19,9 +19,10 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "repoName required" }, 400);
   }
   const newRepo = await createRepo({
-    githubOwner: githubUsername,
+    owner: githubUsername,
     userId,
-    githubRepo: repoName,
+    repo: repoName,
+    provider: 'github'
   });
   return json(newRepo);
 };

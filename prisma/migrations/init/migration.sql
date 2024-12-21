@@ -1,9 +1,12 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "role" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "githubUsername" TEXT NOT NULL,
+    "githubToken" TEXT,
+    "avatarUrl" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -14,20 +17,12 @@ CREATE TABLE "Password" (
     "userId" TEXT NOT NULL
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Password_userId_key" ON "Password"("userId");
-
--- AddForeignKey
-ALTER TABLE "Password" ADD CONSTRAINT "Password_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
 -- CreateTable
 CREATE TABLE "ApiCredential" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT,
     "apiKey" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -39,8 +34,9 @@ CREATE TABLE "Repo" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "githubOwner" TEXT NOT NULL,
-    "githubRepo" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "owner" TEXT NOT NULL,
+    "repo" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Repo_pkey" PRIMARY KEY ("id")
@@ -80,10 +76,27 @@ CREATE TABLE "CoverageSnapshot" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "repoId" TEXT NOT NULL,
     "name" TEXT,
-    "result" JSONB NOT NULL,
+    "result" JSONB,
+    "branch" TEXT NOT NULL,
+    "coverageFilePath" TEXT NOT NULL,
 
     CONSTRAINT "CoverageSnapshot_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_githubUsername_key" ON "User"("githubUsername");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Password_userId_key" ON "Password"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ApiCredential_userId_key" ON "ApiCredential"("userId");
+
+-- AddForeignKey
+ALTER TABLE "Password" ADD CONSTRAINT "Password_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ApiCredential" ADD CONSTRAINT "ApiCredential_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Repo" ADD CONSTRAINT "Repo_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -96,3 +109,4 @@ ALTER TABLE "OutdatedDependency" ADD CONSTRAINT "OutdatedDependency_snapshotId_f
 
 -- AddForeignKey
 ALTER TABLE "CoverageSnapshot" ADD CONSTRAINT "CoverageSnapshot_repoId_fkey" FOREIGN KEY ("repoId") REFERENCES "Repo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

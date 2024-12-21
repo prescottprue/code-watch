@@ -31,7 +31,7 @@ export default function ReposIndexPage() {
                   }
                   to={repo.id}
                 >
-                  📝 {repo.githubOwner}/{repo.githubRepo}
+                  📝 {repo.owner}/{repo.repo}
                 </NavLink>
               </li>
             ))}

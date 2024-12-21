@@ -12,33 +12,35 @@ export function getRepo({
   return prisma.repo.findFirst({
     select: {
       id: true,
-      githubOwner: true,
-      githubRepo: true,
+      owner: true,
+      repo: true,
       coverageSnapshots: true,
     },
     where: { id },
   });
 }
 
-export function getRepoListItems(githubOwner: string) {
+export function getRepoListItems(owner: string, provider: string = 'github') {
   return prisma.repo.findMany({
-    select: { id: true, githubOwner: true, githubRepo: true },
-    where: { githubOwner },
+    select: { id: true, owner: true, repo: true },
+    where: { owner, provider },
     orderBy: { updatedAt: "desc" },
   });
 }
 
 export function createRepo({
-  githubOwner,
-  githubRepo,
+  owner,
+  repo,
+  provider,
   userId,
-}: Pick<Repo, "githubOwner" | "githubRepo"> & {
+}: Pick<Repo, "owner" | "repo" | 'provider'> & {
   userId: User["id"];
 }) {
   return prisma.repo.create({
     data: {
-      githubOwner,
-      githubRepo,
+      owner,
+      repo,
+      provider,
       user: {
         connect: {
           id: userId,
