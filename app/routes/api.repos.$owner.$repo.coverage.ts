@@ -1,9 +1,44 @@
+import { promisify } from "util";
+
 import { CoverageSnapshot, Prisma } from "@prisma/client";
 import { ActionFunction, json, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData } from "@remix-run/node";
+import parseLcov from 'lcov-parse'
 
 import { prisma } from "~/db.server";
 import { requireApiKey } from "~/session.server";
 import { uploadFile } from "~/storage.server";
+
+async function saveLcovFile(filePath: string, fileObj: File) {
+  // Write lcov.info to minio object storage (https://fly.io/docs/app-guides/minio)
+  try {
+    const fileBuffer = await fileObj.arrayBuffer();
+    await uploadFile(filePath, Buffer.from(fileBuffer), fileObj.size, {
+      "Content-Type": fileObj.type,
+    });
+  } catch (err) {
+    console.log("Error uploading file", { err });
+    throw err
+  }
+}
+
+const parseLcovFile = promisify(parseLcov)
+
+async function getCoverageResults(fileStr: string) {
+  const files = await parseLcovFile(fileStr)
+  let total = 0;
+  let executed = 0;
+  files?.forEach((fileResult) => {
+    total += fileResult.lines.found;
+    executed += fileResult.lines.hit;
+  });
+  const coverage = (executed / total) * 100;
+  return {
+    total,
+    executed,
+    coverage,
+    files
+  }
+}
 
 export const action: ActionFunction = async ({ request, params }) => {
   if (request.method !== "POST") {
@@ -52,17 +87,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
-  let coverageFilePath = `coverage-results/${params.owner}/${params.repo}`;
+  const coverageFilePath = `coverage-results/${params.owner}/${params.repo}`;
+  const fileObj = file as File;
   // Write lcov.info to minio object storage (https://fly.io/docs/app-guides/minio)
+
   try {
-    const fileObj = file as File;
-    const fileBuffer = await fileObj.arrayBuffer();
-    await uploadFile(coverageFilePath, Buffer.from(fileBuffer), fileObj.size, {
-      "Content-Type": fileObj.type,
-    });
+    const [results] = await Promise.all([
+      getCoverageResults(file.toString()),
+      saveLcovFile(coverageFilePath, fileObj)
+    ])
   } catch (err) {
     console.log("Error uploading file", { err });
-    return json(
+    return Response.json(
       { errors: { file: "Error uploading coverage file" } },
       { status: 400 },
     );
@@ -73,10 +109,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   // console.log("User id loaded for upload request:", userId);
   try {
     const snapshot = await prisma.coverageSnapshot.create({
-      data: { coverageFilePath, repoId: repo.id, branch },
+      data: { coverageFilePath, repoId: repo.id, branch, },
     });
     console.log("Snapshot uploaded successfully");
-    return json(snapshot, 200);
+    return Response.json(snapshot, { status: 200 });
   } catch (e) {
     // return error action data
     return { error: e };

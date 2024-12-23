@@ -77,6 +77,8 @@ CREATE TABLE "CoverageSnapshot" (
     "repoId" TEXT NOT NULL,
     "name" TEXT,
     "result" JSONB,
+    "totalLines" INTEGER,
+    "coveredLines" INTEGER,
     "branch" TEXT NOT NULL,
     "coverageFilePath" TEXT NOT NULL,
 

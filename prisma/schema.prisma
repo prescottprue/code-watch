@@ -91,6 +91,8 @@ model CoverageSnapshot {
   repo       Repo     @relation(fields: [repoId], references: [id])
   name       String?
   result     Json? // Array{ current, wanted, latest, dependent, location, name }
+  totalLines Int?
+  coveredLines Int?
   branch     String
   coverageFilePath String
   // TODO: Store other stuff here like which API key called

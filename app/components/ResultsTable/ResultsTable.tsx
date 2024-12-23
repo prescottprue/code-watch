@@ -3,7 +3,7 @@ import { format } from "date-fns/format";
 import type {
   CoverageSnapshotWithResult,
   Result,
-} from "~/routes/repos.$repoId";
+} from "~/routes/repos.$repo";
 
 const timeZone = new Intl.DateTimeFormat("en-us", { timeZoneName: "short" })
   ?.formatToParts(new Date())
