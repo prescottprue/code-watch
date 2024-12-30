@@ -25,3 +25,11 @@ services:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=miniopass
       - MINIO_DEFAULT_BUCKETS=vehicle-work-log
+
+networks:
+  minionetwork:
+    driver: bridge
+
+volumes:
+  minio_data:
+    driver: local

@@ -1,6 +1,5 @@
 import { promisify } from "util";
 
-import { CoverageSnapshot, Prisma } from "@prisma/client";
 import { ActionFunction, json, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData } from "@remix-run/node";
 import parseLcov from 'lcov-parse'
 
@@ -50,7 +49,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!request.headers.get('content-type')?.includes('multipart/form-data')) {
     return json({ formError: "Only multipart form-data currently supported" }, 400);
   }
-
 
   // TODO: Verify that this API key has access to the repo
   await requireApiKey(request);

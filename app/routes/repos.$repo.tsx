@@ -34,9 +34,9 @@ export type CoverageSnapshotWithResult = { result: Result } & CoverageSnapshot;
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  invariant(params.repoId, "repoId not found");
+  invariant(params.repo, "repo not found");
 
-  const repo = await getRepo({ id: params.repoId, userId: user?.id as string });
+  const repo = await getRepo({ id: params.repo, userId: user?.id as string });
   if (!repo) {
     throw new Response("Not Found", { status: 404 });
   }
