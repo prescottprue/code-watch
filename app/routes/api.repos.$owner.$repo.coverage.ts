@@ -88,9 +88,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const coverageFilePath = `coverage-results/${params.owner}/${params.repo}`;
   const fileObj = file as File;
   // Write lcov.info to minio object storage (https://fly.io/docs/app-guides/minio)
-
+  let results: Awaited<ReturnType<typeof getCoverageResults>>
   try {
-    const [results] = await Promise.all([
+    [results] = await Promise.all([
       getCoverageResults(file.toString()),
       saveLcovFile(coverageFilePath, fileObj)
     ])
@@ -107,7 +107,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   // console.log("User id loaded for upload request:", userId);
   try {
     const snapshot = await prisma.coverageSnapshot.create({
-      data: { coverageFilePath, repoId: repo.id, branch, },
+      data: { coverageFilePath, repoId: repo.id, branch, coveredLines: results.executed, totalLines: results.total },
     });
     console.log("Snapshot uploaded successfully");
     return Response.json(snapshot, { status: 200 });

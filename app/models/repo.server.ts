@@ -20,7 +20,7 @@ export function getRepo({
   });
 }
 
-export function getRepoListItems(owner: string, provider: string = 'github') {
+export function getRepoListItems(owner: string, provider = 'github') {
   return prisma.repo.findMany({
     select: { id: true, owner: true, repo: true },
     where: { owner, provider },
