@@ -29,9 +29,9 @@ export default function ReposIndexPage() {
                   className={({ isActive }) =>
                     `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
                   }
-                  to={repo.id}
+                  to={repo.repo}
                 >
-                  📝 {repo.githubOwner}/{repo.githubRepo}
+                  📝 {repo.owner}/{repo.repo}
                 </NavLink>
               </li>
             ))}

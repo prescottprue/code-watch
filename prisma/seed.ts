@@ -18,16 +18,18 @@ async function seed() {
 
   await prisma.repo.create({
     data: {
-      githubOwner: "octocat",
-      githubRepo: "Hello-World",
+      owner: "octocat",
+      repo: "Hello-World",
+      provider: 'github',
       userId: user.id,
     },
   });
 
   await prisma.repo.create({
     data: {
-      githubOwner: "octocat",
-      githubRepo: "Hello-World-2",
+      owner: "octocat",
+      repo: "Hello-World-2",
+      provider: 'github',
       userId: user.id,
     },
   });

@@ -34,9 +34,9 @@ export type CoverageSnapshotWithResult = { result: Result } & CoverageSnapshot;
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  invariant(params.repoId, "repoId not found");
+  invariant(params.repo, "repo not found");
 
-  const repo = await getRepo({ id: params.repoId, userId: user?.id as string });
+  const repo = await getRepo({ id: params.repo, userId: user?.id as string });
   if (!repo) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -45,12 +45,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function RepoDetailsPage() {
   const { repo } = useLoaderData<typeof loader>();
-  const repoUrl = `https://github.com/${repo.githubOwner}/${repo.githubRepo}`;
-
+  const repoUrl = `https://github.com/${repo.owner}/${repo.repo}`;
   return (
     <div className="py-6 px-6 w-full">
       <h3 className="text-2xl font-bold">
-        <Link to="/repos">{repo.githubOwner}</Link>/{repo.githubRepo}
+        <Link to="/repos">{repo.owner}</Link>/{repo.repo}
       </h3>
       <div className="flex justify-end">
         {" "}
@@ -69,9 +68,9 @@ export default function RepoDetailsPage() {
         ) : (
           <div>
             <h3 className="text-m font-bold">No coverage snapshots</h3>
-            <div className="flex justify-center">
-              <pre style={{ display: "inline" }}>POST</pre> results to
-              /api/repos/$owner/$repo/coverage
+            <div className="flex flex-col items-center">
+              <p><pre style={{ display: "inline" }}>POST</pre> results to:</p><br />
+              <p>/api/repos/{repo.owner}/{repo.repo}/coverage</p>
             </div>
           </div>
         )}

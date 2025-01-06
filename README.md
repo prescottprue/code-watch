@@ -6,11 +6,11 @@
 
 A number of providers offer free coverage or dependency status reporting for open source projects, but for private project, the pricing model is often prohibitive. The problem is often compounded further by a large team size.
 
-Code Watch has the goal of providing an application which can be fully self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances.
+Code Watch has the goal of providing an application which can be self hosted to allow for costs to scale with usage. For low amounts of usage, platforms like [Fly.io](https://fly.io) offer free Postgres instances.
 
 ## Features
 
-- Tracking and displaying coverage results
+- Tracking and displaying coverage results (storage of results within Minio object storage)
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#creatememorysessionstorage)
 
 ### Planned
@@ -21,8 +21,9 @@ Code Watch has the goal of providing an application which can be fully self host
 
 ### System Features
 
-- [Multi-region Fly app deployment](https://fly.io/docs/reference/scaling/) with [Docker](https://www.docker.com/)
-- [Multi-region Fly PostgreSQL Cluster](https://fly.io/docs/getting-started/multi-region-databases/)
+- Deployment through Google Cloud Run or Fly. Deployment to Fly includes:
+  - [Multi-region Fly app deployment](https://fly.io/docs/reference/scaling/) with [Docker](https://www.docker.com/)
+  - [Multi-region Fly PostgreSQL Cluster](https://fly.io/docs/getting-started/multi-region-databases/)
 - Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
 - [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#creatememorysessionstorage)

@@ -46,8 +46,9 @@ model Repo {
   id    String @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  githubOwner String
-  githubRepo String
+  provider String
+  owner String
+  repo String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
@@ -90,6 +91,9 @@ model CoverageSnapshot {
   repo       Repo     @relation(fields: [repoId], references: [id])
   name       String?
   result     Json? // Array{ current, wanted, latest, dependent, location, name }
-  branch     String?
+  totalLines Int?
+  coveredLines Int?
+  branch     String
+  coverageFilePath String
   // TODO: Store other stuff here like which API key called
 }
