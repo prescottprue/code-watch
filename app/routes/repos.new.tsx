@@ -90,7 +90,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!owner || !repo) {
     throw new Error("owner and repo required");
   }
-  await createRepo({ owner, repo, userId: user.id });
+  await createRepo({ owner, repo, userId: user.id, provider: 'github' });
   return null;
 };
 
